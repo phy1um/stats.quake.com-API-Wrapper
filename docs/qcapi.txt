@@ -1,0 +1,159 @@
+endpoints:
+
+https://stats.quake.com/api/v1/Player/Stats
+  Query:
+    name - string
+    ???
+  response:
+    {
+      name: string
+      playerRatings: {
+        MODE_NAME: {
+          rating: int
+          deviation: int
+          volatility: float
+          lastUpdated: timestamp ?? (not unix)
+          gamesCount: int
+          lastChange: int
+          history: [ HISTORYDATA ] (len = gamesCount?)
+          with HISTORYDATA := {
+            gamesPlayed: 1
+            eloRating: int
+            time: timestamp (yyyy-mm-ddThh:mm:ss.mmmZ)
+            result: int (??)
+          }
+        }
+        ...
+      },
+      playerLoadOut: {
+        namePlateId: id
+        iconId: id
+      },
+      playerProfileStats: {
+        champions: {
+          CHAMP_NAME: {
+            lots of stuff
+          }
+          ...
+        }
+      },
+      playerLevelState: {
+        level: int,
+        exp: int
+      },
+      matches: [ MATCH_INFO ]
+      with MATCH_INFO := {
+        id: uuid
+        playedDateTime: timestamp (yyyy-mm-ddThh:mm:ss.mmmmmmm+00:00)
+        gameMode: mode,
+        map: map,
+        score: [ i: team i's score ],
+        scoreLimit: int,
+        timeLimit: int
+      }
+    }
+
+https://stats.quake.com/api/v1/Player/GamesSummary
+  query:
+    name - string
+    ???
+  response: [ MATCH_SUMMARY ]
+  with MATCH_SUMMARY := {
+    id: uuid,
+    time: (yyyy-mm-ddThh:mm:ss.mmmZ),
+    mapName: map,
+    rank: int,
+    score: [ i: team i's score ],
+    gameMode: mode,
+    won: bool,
+    xp: int,
+    kdr: float,
+    totalDamage: int,
+    weaponAccuracy: {
+      WEAPON_NAME: float,
+      ...
+    },
+  }
+
+https://stats.quake.com/api/v1/Player/Games
+  query:
+    id - match uuid
+    playerName - string
+  response: {
+    MATCH_SUMMARY,
+    with MATCH_SUMMARY as above
+    battleReportPersonalStatistics: [ PLAYER_REPORT ]
+    with PLAYER_REPORT := {
+      isCustomGame: bool,
+      userId: uuid,
+      nickname: profile name,
+      teamIndex: int,
+      averageLivetime: millis?,
+      score: int,
+      totalDamage: int,
+      kills: int,
+      deaths: int,
+      previousProileXp: int,
+      megaHealthPickups: int,
+      heavyArmorPickups: int,
+      smallArmorPickups: int,
+      powerPickups: int,
+      hpHealed: int,
+      bestWeapon: weapon name,
+      bestWeaponAccuracyPercent: int,
+      bestWeaponDamage: int,
+      bestWeaponKills: int,
+      lastSelectedChampion: champ,
+      completedChallenges: [],
+      completedStaticChallenges: [],
+      scoringEvents: {
+        name: int
+      },
+      championsTime: {
+        champion name: millis?
+      },
+      frag: int,
+      duelScore: 0,
+      squadChampionsIndexArray: [] ??
+      damageStatsWithDamageTypeIndexArray: {
+        WEAPON_NAME: {
+          shots: int,
+          hits: int,
+          damage: int,
+          kills: int
+        }
+        ...
+      }
+      sumAllDamageStats: {
+        shots: int,
+        hits: int,
+        damage: int,
+        kills: int
+      },
+      earnedXp: int,
+      bonusXp: int,
+      earnedFavor: int,
+      bonusFavor: int
+    }
+
+https://stats.quake.com/api/v1/Player/Search
+  Query:
+    term - string
+  response: [ entityData ]
+  with entityData := {
+    entityId: uuid,
+    entityName: string
+  }
+
+  
+resources:
+  stats.quake.com/medals/*.png
+  stats.quake.com/weapons/*.png
+  stats.quake.com/icons/ICON_ID.png
+  stats.quake.com/nameplates/NAMEPLATE_ID.png
+  stats.quake.com/ranks/RANK.png
+  stats.quake.com/champions/NAME.png
+  stats.quake.com/maps/blood_run.png
+  
+weapon names:
+  GAUNTLET, MACHINEGUN, MACHINEGUN_GRADE1, SHOTGUN, _GRADE1, NAILGUN, _GRADE1, ROCKET_LAUNCHER, LIGHTNING_GUN, RAILGUN, LAGBOLT
