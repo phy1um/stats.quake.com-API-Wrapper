@@ -1,5 +1,5 @@
 import requests
-from api import api_path
+from .api import api_path
 from types import SimpleNamespace
 
 

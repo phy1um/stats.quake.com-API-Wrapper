@@ -1,7 +1,7 @@
 import requests
-from api import api_path
+from .api import api_path
 from types import SimpleNamespace
-from qcrating import QCRating
+from .qcrating import QCRating
 
 
 class QCPlayer(object):
