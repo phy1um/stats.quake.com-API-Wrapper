@@ -23,6 +23,7 @@ _table = {
     0: "Bronze_01"
 }
 
+
 def get_rank_name(rank):
         for value in _table:
             if rank >= value:
